@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import flopy# -*- coding: utf-8 -*-
 
+#Datos
 name = "Mod18_01_1"
 h1 = 100
 h2 = 90
@@ -52,6 +53,8 @@ start = h1 * np.ones((Nlay, N, N))
 ic = flopy.mf6.ModflowGwfic(gwf, pname="ic", strt=start)
 
 #Paquete que controla el flujo entre creldas = npf
+k=np.ones([10,N,N])
+k[1,:,:]=5e-3
 npf = flopy.mf6.ModflowGwfnpf(gwf, icelltype=1, k=k, save_flows=True)
 
 #
