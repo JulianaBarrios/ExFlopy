@@ -10,7 +10,7 @@ import flopy# -*- coding: utf-8 -*-
 
 #Datos
 name = "Mod18_01_1"
-h1 = 100
+h1 = 95.25
 h2 = 90
 Nlay = 10
 N = 101
