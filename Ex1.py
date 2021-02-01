@@ -145,6 +145,7 @@ contours = modelmap.contour_array(
     h[0], levels=np.arange(90, 100.1, 0.2), colors="blue"
 )
 ax.clabel(contours, fmt="%2.1f")
+
 # second subplot
 ax = axes[1]
 ax.set_title("Model Layer {}".format(Nlay))
