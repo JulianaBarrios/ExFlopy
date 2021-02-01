@@ -108,8 +108,9 @@ h = hds.get_data(kstpkper=(0, 0))
 x = y = np.linspace(0, L, N)
 y = y[::-1]
 fig = plt.figure(figsize=(6, 6))
+fig = plt.figure(facecolor="gray")
 ax = fig.add_subplot(1, 1, 1, aspect="equal")
-c = ax.contour(x, y, h[0], np.arange(90, 100.1, 0.2), colors="black")
+c = ax.contour(x, y, h[0], np.arange(90, 100.1, 0.2), colors="green")
 plt.clabel(c, fmt="%2.1f") 
 
 #Plotear otra capa
@@ -117,15 +118,45 @@ x = y = np.linspace(0, L, N)
 y = y[::-1]
 fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot(1, 1, 1, aspect="equal")
-c = ax.contour(x, y, h[-5], np.arange(90, 100.1, 0.2), colors="black")
+c = ax.contour(x, y, h[-5], np.arange(90, 100.1, 0.2), colors="red")
 plt.clabel(c, fmt="%1.1f") 
 
 #Ploteando sección transversal
 z = np.linspace(-H / Nlay / 2, -H + H / Nlay / 2, Nlay)
 fig = plt.figure(figsize=(5, 2.5))
 ax = fig.add_subplot(1, 1, 1, aspect="auto")
-c = ax.contour(x, z, h[:, 50, :], np.arange(90, 100.1, 0.2), colors="black")
+c = ax.contour(x, z, h[:, 50, :], np.arange(90, 100.1, 0.2), colors="blue")
 plt.clabel(c, fmt="%1.1f")
+
+#
+ibd = np.ones((Nlay, N, N), dtype=np.int)
+for k, i, j in ra["cellid"]:
+    ibd[k, i, j] = -1
+    
+#Plotear un mapa de las capas 1 y 10
+fig, axes = plt.subplots(2, 1, figsize=(6, 12), constrained_layout=True)
+# first subplot
+ax = axes[0]
+ax.set_title("Model Layer 1")
+modelmap = flopy.plot.PlotMapView(model=gwf, ax=ax)
+quadmesh = modelmap.plot_ibound(ibound=ibd)
+linecollection = modelmap.plot_grid(lw=0.5, color="0.5")
+contours = modelmap.contour_array(
+    h[0], levels=np.arange(90, 100.1, 0.2), colors="blue"
+)
+ax.clabel(contours, fmt="%2.1f")
+# second subplot
+ax = axes[1]
+ax.set_title("Model Layer {}".format(Nlay))
+modelmap = flopy.plot.PlotMapView(model=gwf, ax=ax, layer=Nlay - 1)
+quadmesh = modelmap.plot_ibound(ibound=ibd)
+linecollection = modelmap.plot_grid(lw=0.5, color="0.5")
+pa = modelmap.plot_array(h[0])
+contours = modelmap.contour_array(
+    h[0], levels=np.arange(90, 100.1, 0.2), colors="red"
+)
+cb = plt.colorbar(pa, shrink=0.5, ax=ax)
+ax.clabel(contours, fmt="%2.1f")    
 
 
     
